@@ -1,12 +1,13 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f1f1f1;
+    color: #333;
 }
 
 header {
-    background-color: #333;
+    background-color: #4CAF50;
     color: white;
     padding: 10px 0;
     text-align: center;
@@ -27,18 +28,50 @@ header nav ul li a {
     text-decoration: none;
 }
 
-section {
+#home {
+    text-align: center;
     padding: 20px;
-    margin: 20px;
+}
+
+#featured-articles {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.article-preview {
+    text-align: center;
+    width: 45%;
+    background-color: #fafafa;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.article-preview img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+#articles {
+    padding: 20px;
+}
+
+#articles img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
 }
 
 footer {
     text-align: center;
     padding: 10px;
-    background-color: #333;
+    background-color: #4CAF50;
     color: white;
 }
 
-.project {
-    margin-bottom: 20px;
+.news-ticker {
+    margin-top: 15px;
 }
