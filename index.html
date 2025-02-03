@@ -45,7 +45,7 @@
     
     <script>
         async function fetchWeather() {
-            const response = await fetch('https://api.weatherapi.com/v1/current.json?key=YOUR_API_KEY&q=auto:ip');
+            const response = await fetch('https://api.weatherapi.com/v1/current.json?key=00f1efe688e94fe1876154753250302&q=auto:ip');
             const data = await response.json();
             document.getElementById('weather-data').innerText = `${data.location.name}: ${data.current.temp_c}°C, ${data.current.condition.text}`;
         }
