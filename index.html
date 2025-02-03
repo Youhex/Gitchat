@@ -3,108 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        .container { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; }
-        .widget { border: 1px solid #ccc; padding: 10px; border-radius: 5px; width: 300px; }
-    </style>
+    <title>Gitchat</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> <!-- Optional for making API calls easier -->
 </head>
 <body>
-    <div class="container">
-        <div class="widget" id="calendar">
-            <h2>Calendar</h2>
-            <iframe src="https://calendar.google.com/calendar/embed?src=201022020ec109253f34cde65e6062944ffc5988680d70b855243c0fd0726826@group.calendar.google.com
-" style="border: 0" width="100%" height="300" frameborder="0" scrolling="no"></iframe>
-        </div>
-        <div class="widget" id="weather">
-            <h2>Weather</h2>
-            <p id="weather-data">Loading...</p>
-        </div>
-        <div class="widget" id="moon-phase">
-            <h2>Moon Phase</h2>
-            <p id="moon-data">Loading...</p>
-        </div>
-        <div class="widget" id="todo-list">
-            <h2>To-Do List</h2>
-            <ul id="tasks"></ul>
-            <input type="text" id="new-task" placeholder="New task">
-            <button onclick="addTask()">Add</button>
-        </div>
-        <div class="widget" id="shopping-list">
-            <h2>Shopping List</h2>
-            <ul id="shopping"></ul>
-            <input type="text" id="new-item" placeholder="New item">
-            <button onclick="addItem()">Add</button>
-        </div>
-        <div class="widget" id="traffic">
-            <h2>Traffic Conditions</h2>
-            <p id="traffic-data">Loading...</p>
-        </div>
+
+    <!-- Other sections of your site... -->
+
+    <div id="weather">
+        <h2>7-Day Weather Forecast</h2>
+        <div id="forecast"></div>
     </div>
-    
+
+    <!-- Other sections of your site... -->
+
     <script>
-        async function fetchWeather() {
-            const response = await fetch('https://api.weatherapi.com/v1/current.json?key=00f1efe688e94fe1876154753250302&q=auto:ip');
-            const data = await response.json();
-            document.getElementById('weather-data').innerText = `${data.location.name}: ${data.current.temp_c}°C, ${data.current.condition.text}`;
+        const apiKey = '00f1efe688e94fe1876154753250302'; // Your OpenWeatherMap API key
+        const city = 'Toronto'; // Replace with your preferred city
+
+        const weatherContainer = document.getElementById('forecast');
+
+        function getWeather() {
+            // You can update the lat and lon to the coordinates of your preferred city
+            const url = `https://api.openweathermap.org/data/2.5/onecall?lat=43.7&lon=-79.42&exclude=current,minutely,hourly,alerts&units=metric&appid=${apiKey}`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const forecast = data.daily;
+                    let forecastHTML = '';
+
+                    forecast.forEach((day, index) => {
+                        const date = new Date(day.dt * 1000);
+                        const dayName = date.toLocaleDateString('en-GB', { weekday: 'short' });
+                        const temp = day.temp.day;
+                        const description = day.weather[0].description;
+                        const icon = `https://openweathermap.org/img/wn/${day.weather[0].icon}.png`;
+
+                        forecastHTML += `
+                            <div class="forecast-day">
+                                <h3>${dayName}</h3>
+                                <img src="${icon}" alt="${description}" />
+                                <p>${temp}°C</p>
+                                <p>${description}</p>
+                            </div>
+                        `;
+                    });
+
+                    weatherContainer.innerHTML = forecastHTML;
+                })
+                .catch(error => console.error('Error fetching weather data:', error));
         }
 
-       async function fetchMoonPhase() {
-    const apiKey = "00f1efe688e94fe1876154753250302&q"; // Replace with your actual key
-    const response = await fetch(`https://api.weatherapi.com/v1/astronomy.json?key=${apiKey}&q=auto:ip`);
-    const data = await response.json();
-
-    if (data.astronomy) {
-        document.getElementById('moon-data').innerText = `Moon Phase: ${data.astronomy.astro.moon_phase}`;
-    } else {
-        document.getElementById('moon-data').innerText = "Moon phase data unavailable.";
-    }
-}
-
-
-        function addTask() {
-            const task = document.getElementById('new-task').value;
-            if (task) {
-                let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-                tasks.push(task);
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-                renderTasks();
-                document.getElementById('new-task').value = '';
-            }
-        }
-        
-        function renderTasks() {
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            document.getElementById('tasks').innerHTML = tasks.map(task => `<li>${task}</li>`).join('');
-        }
-        
-        function addItem() {
-            const item = document.getElementById('new-item').value;
-            if (item) {
-                let items = JSON.parse(localStorage.getItem('shopping')) || [];
-                items.push(item);
-                localStorage.setItem('shopping', JSON.stringify(items));
-                renderItems();
-                document.getElementById('new-item').value = '';
-            }
-        }
-        
-        function renderItems() {
-            let items = JSON.parse(localStorage.getItem('shopping')) || [];
-            document.getElementById('shopping').innerHTML = items.map(item => `<li>${item}</li>`).join('');
-        }
-
-        async function fetchTraffic() {
-            document.getElementById('traffic-data').innerText = 'Traffic data coming soon...';
-        }
-
-        fetchWeather();
-        fetchMoonPhase();
-        fetchTraffic();
-        renderTasks();
-        renderItems();
+        getWeather();
     </script>
+
+    <style>
+        #weather {
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        #forecast {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .forecast-day {
+            text-align: center;
+            width: 100px;
+            margin: 10px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .forecast-day img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .forecast-day h3 {
+            margin: 10px 0;
+        }
+    </style>
+
+    <!-- Other sections of your site... -->
+
 </body>
 </html>
-
