@@ -1,98 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gitchat</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> <!-- Optional for making API calls easier -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gitchat: Tracking Conversations</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Left nav */
+    #nav {
+      width: 200px;
+      background-color: #2c3e50;
+      color: white;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    #nav h2 {
+      font-size: 18px;
+      margin-top: 0;
+    }
+
+    #nav ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    #nav li {
+      margin: 10px 0;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 4px;
+    }
+
+    #nav li:hover {
+      background-color: #34495e;
+    }
+
+    #nav li.active {
+      background-color: #16a085;
+    }
+
+    /* Right content area */
+    #content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    /* Collapsible sections */
+    details {
+      margin-bottom: 10px;
+    }
+
+    summary {
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    code {
+      display: block;
+      background-color: #ecf0f1;
+      padding: 5px;
+      border-radius: 4px;
+      margin-top: 5px;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
+  <div id="nav">
+    <h2>Topics</h2>
+    <ul>
+      <li class="active" data-topic="org2025">org2025</li>
+      <li data-topic="colour-guide">colour guide</li>
+    </ul>
+  </div>
 
-    <!-- Other sections of your site... -->
+  <div id="content">
+    <!-- Default content -->
+    <h1>org2025</h1>
+    <p>coming soon</p>
+  </div>
 
-    <div id="weather">
-        <h2>7-Day Weather Forecast</h2>
-        <div id="forecast"></div>
-    </div>
+  <script>
+    const navItems = document.querySelectorAll('#nav li');
+    const content = document.getElementById('content');
 
-    <!-- Other sections of your site... -->
+    // Content for each topic
+    const pages = {
+      "org2025": `<h1>org2025</h1><p>coming soon</p>`,
+      "colour-guide": `
+<h1>Colourcode System – Full Implementation Guide</h1>
 
-    <script>
-        const apiKey = '00f1efe688e94fe1876154753250302'; // Your OpenWeatherMap API key
-        const city = 'Toronto'; // Replace with your preferred city
+<details>
+<summary>1. Purpose</summary>
+<p>The colourcode system visually categorizes tasks, statuses, or items in your workflow. Each colour corresponds to a specific meaning or priority. Includes manual, semi-automated, and automated implementation steps.</p>
+</details>
 
-        const weatherContainer = document.getElementById('forecast');
+<details>
+<summary>2. Colour Definitions</summary>
+<table border="1" cellpadding="5" cellspacing="0">
+<tr><th>Colour</th><th>Meaning</th><th>Hex</th></tr>
+<tr><td>Red</td><td>Urgent / Blocked</td><td>#FF4C4C</td></tr>
+<tr><td>Yellow</td><td>Pending / Needs Review</td><td>#FFD700</td></tr>
+<tr><td>Green</td><td>Completed / OK</td><td>#4CAF50</td></tr>
+<tr><td>Blue</td><td>Info / Reference</td><td>#2196F3</td></tr>
+<tr><td>Grey</td><td>On Hold / Deferred</td><td>#B0B0B0</td></tr>
+</table>
+</details>
 
-        function getWeather() {
-            // You can update the lat and lon to the coordinates of your preferred city
-            const url = `https://api.openweathermap.org/data/2.5/onecall?lat=43.7&lon=-79.42&exclude=current,minutely,hourly,alerts&units=metric&appid=${apiKey}`;
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    const forecast = data.daily;
-                    let forecastHTML = '';
+<details>
+<summary>3. Implementation Steps</summary>
 
-                    forecast.forEach((day, index) => {
-                        const date = new Date(day.dt * 1000);
-                        const dayName = date.toLocaleDateString('en-GB', { weekday: 'short' });
-                        const temp = day.temp.day;
-                        const description = day.weather[0].description;
-                        const icon = `https://openweathermap.org/img/wn/${day.weather[0].icon}.png`;
+<details>
+<summary>Step 1: Define Colour Variables</summary>
+<pre><code>--colour-urgent: #FF4C4C;
+--colour-pending: #FFD700;
+--colour-completed: #4CAF50;
+--colour-info: #2196F3;
+--colour-onhold: #B0B0B0;</code></pre>
+</details>
 
-                        forecastHTML += `
-                            <div class="forecast-day">
-                                <h3>${dayName}</h3>
-                                <img src="${icon}" alt="${description}" />
-                                <p>${temp}°C</p>
-                                <p>${description}</p>
-                            </div>
-                        `;
-                    });
+<details>
+<summary>Step 2: Assign Colours to Items</summary>
+<p>Identify items for colour-coding: tasks, emails, calendar events, spreadsheet rows. Decide if assignment is manual or automated.</p>
+</details>
 
-                    weatherContainer.innerHTML = forecastHTML;
-                })
-                .catch(error => console.error('Error fetching weather data:', error));
-        }
+<details>
+<summary>Step 3: Apply in Tools / UI</summary>
 
-        getWeather();
-    </script>
+<details>
+<summary>a) Excel / Google Sheets</summary>
+<p>Use conditional formatting rules based on Status column. Example: Status = "Urgent" → fill colour = #FF4C4C.</p>
+</details>
 
-    <style>
-        #weather {
-            padding: 20px;
-            background-color: #f0f0f0;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
+<details>
+<summary>b) Outlook / Office 365</summary>
+<p>
+1. Go to View → View Settings → Conditional Formatting.<br>
+2. Create a rule for each status (Red = Urgent, Yellow = Pending, etc.).<br>
+3. Repeat for all colours.
+</p>
+</details>
 
-        #forecast {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
+<details>
+<summary>c) PowerShell Automation</summary>
+<pre><code># Connect to Outlook
+Add-Type -AssemblyName Microsoft.Office.Interop.Outlook
+$outlook = New-Object -ComObject Outlook.Application
+$namespace = $outlook.GetNamespace("MAPI")
+$inbox = $namespace.GetDefaultFolder([Microsoft.Office.Interop.Outlook.OlDefaultFolders]::olFolderInbox)
 
-        .forecast-day {
-            text-align: center;
-            width: 100px;
-            margin: 10px;
-            background-color: #fff;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
+foreach ($mail in $inbox.Items) {
+    if ($mail.Subject -like "*URGENT*") {
+        $mail.Categories = "Red"
+        $mail.Save()
+    }
+    elseif ($mail.Subject -like "*Pending*") {
+        $mail.Categories = "Yellow"
+        $mail.Save()
+    }
+    elseif ($mail.Subject -like "*Completed*") {
+        $mail.Categories = "Green"
+        $mail.Save()
+    }
+}</code></pre>
+</details>
 
-        .forecast-day img {
-            width: 50px;
-            height: 50px;
-        }
+</details>
 
-        .forecast-day h3 {
-            margin: 10px 0;
-        }
-    </style>
+<details>
+<summary>Step 4: Document the Colourcode System</summary>
+<p>Maintain a reference table and include automation scripts and usage instructions for team members.</p>
+</details>
 
-    <!-- Other sections of your site... -->
+<details>
+<summary>Step 5: Test Implementation</summary>
+<p>Apply colours to a small batch first. Check visibility, correct mapping, accessibility, and adjust rules as needed.</p>
+</details>
 
+</details>
+
+<details>
+<summary>4. Maintenance</summary>
+<ul>
+<li>Review colour meanings periodically.</li>
+<li>Add new categories with distinct colours if workflows expand.</li>
+<li>Maintain a single source of truth for scripts, rules, and formatting definitions.</li>
+<li>Update automation scripts or Outlook rules when workflows change.</li>
+</ul>
+</details>
+`
+    };
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        // Remove active from all
+        navItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        // Load content
+        const topic = item.dataset.topic;
+        content.innerHTML = pages[topic];
+      });
+    });
+  </script>
 </body>
 </html>
